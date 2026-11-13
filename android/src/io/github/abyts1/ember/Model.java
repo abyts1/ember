@@ -130,6 +130,7 @@ final class Model {
 
     /** ARGB overlay colour for a temperature; transparent at >= 6500K. */
     int overlayColor(int k) {
+        if (k >= 6500) return 0;
         double t = k / 100.0;
         double r = t <= 66 ? 255 : 329.698727446 * Math.pow(t - 60, -0.1332047592);
         double g = t <= 66 ? 99.4708025861 * Math.log(t) - 161.1195681661

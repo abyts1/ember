@@ -131,14 +131,23 @@ public class OverlayService extends Service {
 
     private void setColor(int color, boolean fade) {
         if (anim != null) anim.cancel();
+        // A fully transparent overlay still costs a compositor layer; hide it instead.
+        if (color >>> 24 != 0) overlay.setVisibility(View.VISIBLE);
         if (!fade) {
             overlay.setBackgroundColor(color);
+            if (color >>> 24 == 0) overlay.setVisibility(View.GONE);
             return;
         }
         int from = ((android.graphics.drawable.ColorDrawable) overlay.getBackground()).getColor();
         anim = ValueAnimator.ofObject(new ArgbEvaluator(), from, color);
         anim.setDuration(1500);
         anim.addUpdateListener(a -> overlay.setBackgroundColor((int) a.getAnimatedValue()));
+        if (color >>> 24 == 0) anim.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator a) {
+                overlay.setVisibility(View.GONE);
+            }
+        });
         anim.start();
     }
 
