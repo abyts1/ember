@@ -9,6 +9,12 @@ This port uses the same sun model as the Linux daemon. Android doesn't let regul
 - Uses no AndroidX or Gradle, so the APK stays small
 - Needs Android 10 or newer
 
+## Covering the status bar and notifications
+
+A normal app overlay sits below the status bar, navigation bar, notification shade and quick settings. To tint those as well, tap **Cover status bar & notifications…** in the app. Then turn on **Ember (cover system UI)** under Accessibility → Downloaded apps. Ember switches to an accessibility overlay, which draws above system UI, and drops its notification.
+
+The accessibility service subscribes to no events and can't read screen content. It exists only to get that window type. On Android 13+, sideloaded apps can't turn on accessibility until you allow it: go to App info → ⋮ → **Allow restricted settings**, then try again.
+
 ## Install
 
 Download `ember.apk` from the [Releases](https://github.com/abyts1/ember/releases) page and allow **Display over other apps** when asked.
@@ -26,4 +32,4 @@ The first build creates a signing key at `~/.android/ember-release.jks`. Keep it
 
 ## Limitations
 
-An overlay can only add a tint. It can't remove blue light the way a colour matrix does, so very warm settings also dim the screen a little. Opacity is capped at 75%, below Android 12's 80% limit for overlays that let touches through. Some system screens, such as the permission dialogs, hide overlays by design.
+An overlay can only add a tint. It can't remove blue light the way a colour matrix does, so very warm settings also dim the screen a little. Opacity is capped at 75%, below Android 12's 80% limit for overlays that let touches through. Without the accessibility service, some system screens such as permission dialogs hide the overlay by design.

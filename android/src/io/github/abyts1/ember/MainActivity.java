@@ -63,8 +63,17 @@ public class MainActivity extends Activity {
             stopService(new Intent(this, OverlayService.class));
             refresh();
         });
+        Button sys = new Button(this);
+        sys.setText("Cover status bar & notifications…");
+        sys.setOnClickListener(v -> startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)));
         col.addView(on);
         col.addView(off);
+        col.addView(sys);
+        TextView hint = new TextView(this);
+        hint.setText("Turn on \"Ember (cover system UI)\" under Accessibility → Downloaded apps. "
+                + "If it's greyed out: App info → ⋮ → Allow restricted settings.");
+        hint.setPadding(0, dp(4), 0, 0);
+        col.addView(hint);
 
         ScrollView sv = new ScrollView(this);
         sv.setFitsSystemWindows(true);
@@ -141,7 +150,7 @@ public class MainActivity extends Activity {
         m.save(this);
         fill(m);
 
-        if (!Settings.canDrawOverlays(this)) {
+        if (!EmberAccessibilityService.isRunning() && !Settings.canDrawOverlays(this)) {
             status.setText("Allow \"Display over other apps\" for Ember, then come back.");
             startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName())));
@@ -168,8 +177,9 @@ public class MainActivity extends Activity {
             return;
         }
         long now = System.currentTimeMillis();
-        status.setText(String.format(Locale.US, "%s · sun %.1f° · target %dK",
-                m.enabled ? (m.paused ? "Paused" : "On") : "Off", m.sunAt(now), m.targetK(now)));
+        String mode = EmberAccessibilityService.isRunning() ? "covers system UI" : "apps only";
+        status.setText(String.format(Locale.US, "%s (%s) · sun %.1f° · target %dK",
+                m.enabled ? (m.paused ? "Paused" : "On") : "Off", mode, m.sunAt(now), m.targetK(now)));
     }
 
     private int dp(int v) {
