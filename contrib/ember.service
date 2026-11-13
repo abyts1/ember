@@ -1,0 +1,16 @@
+[Unit]
+Description=ember - sun-aware screen colour temperature
+Documentation=https://github.com/abyts1/ember
+PartOf=graphical-session.target
+After=graphical-session.target hyprsunset.service
+Wants=hyprsunset.service
+
+[Service]
+ExecStart=/usr/bin/ember
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+Nice=10
+
+[Install]
+WantedBy=graphical-session.target

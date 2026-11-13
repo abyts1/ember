@@ -1,0 +1,24 @@
+# ember config — copy to ~/.config/ember/config
+# Location (decimal degrees; north and east are positive). Required.
+latitude  = 51.51
+longitude = -0.13
+
+# Colour temperatures in kelvin (1000-20000)
+day_temp   = 6500   # sun above elevation_day
+night_temp = 3400   # sun below elevation_night
+late_temp  = 2300   # late-night mode (only used if late_start/late_end are set)
+
+# Late-night mode: fades in over 45 min before late_start, out over 45 min after late_end.
+late_start = off    # e.g. 23:00
+late_end   = off    # e.g. 06:00
+
+# Earliest wake time: stay at night_temp from midnight until this time, even if the
+# sun is already up, then ease to the sun schedule over 30 min.
+wake_time = off    # e.g. 06:00
+
+# Sun elevation (degrees) bounding the dusk/dawn transition. -6 = end of civil twilight.
+elevation_day   = 3
+elevation_night = -6
+
+step    = 25    # only push changes of at least this many kelvin
+fade_ms = 1500  # fade duration for jumps > 300K (startup, resume, late mode); 0 = snap
